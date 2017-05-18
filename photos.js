@@ -34,7 +34,7 @@ module.exports = class flickrApi {
       let photo = resp.photos.photo[0];
       if (photo) {
         cb(null, {
-          url: `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_b.jpg`,
+          url: `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_q.jpg`,
           photo: photo
         });
       } else {

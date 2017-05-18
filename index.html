@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        img {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test</h1>
+    <div id="cities"></div>
+    <script>
+      let cities = [
+        'atlanta',
+        'boston',
+        'chicago',
+        'dallas',
+        'delhi',
+        'guangzhou',
+        'honolulu',
+        'johannesburg',
+        'las vegas',
+        'los angeles',
+        'madrid',
+        'miami',
+        'moscow',
+        'nyc',
+        'orlando',
+        'paris',
+        'shanghai',
+        'shenzhen',
+        'tokyo',
+        'ubud',
+        'venice'
+      ];
+      let citiesElArray = cities.map(city => {
+        let el = document.createElement('img');
+        el.src = '/search/'+city;
+        el.title = city;
+        return el;
+      });
+      let container = document.getElementById('cities');
+      citiesElArray.forEach(el => {
+        container.appendChild(el);
+      });
+    </script>
+</body>
+</html>

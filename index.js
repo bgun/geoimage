@@ -1,4 +1,6 @@
-const express  = require('express');
+const express = require('express');
+const request = require('superagent');
+
 const server = express();
 const PORT = process.env.PORT || 9999;
 
@@ -22,14 +24,21 @@ server.get('/search/:city', (req, res) => {
             res.status(404).send({ error: err });
           } else {
             console.log(photo);
-            res
-              .set('Content-Type','text/html')
-              .send("<img src='"+photo.url+"' />");
+            request.get(photo.url, (err, data) => {
+              if (err) throw err;
+              res
+                .set('Content-Type', 'image/jpeg')
+                .send(data.body);
+            });
           }
         });
       });
     }
   });
+});
+
+server.get('/test', (req, res) => {
+  res.sendfile('index.html');
 });
 
 console.log("listening on port %d", PORT);
