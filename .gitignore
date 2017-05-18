@@ -1,0 +1,10 @@
+# don't track osx turds
+.DS_Store
+
+*.swp
+*.swo
+*.log
+
+/node_modules
+
+/.idea
