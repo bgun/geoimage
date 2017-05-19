@@ -4,9 +4,12 @@ let flickrOptions = {
   secret: "cded1c9a57328c31"
 };
 
+let API500px = require('500px');
+
 module.exports = class flickrApi {
 
   constructor(ready) {
+    this.api500px = new API500px("fUs2MhwbMpQy65WQFXdS3L7V3l1hyliZ1RiQlMxM");
     Flickr.tokenOnly(flickrOptions, (err, flickr) => {
       this.flickr = flickr;
       if (err) throw err;
@@ -15,17 +18,39 @@ module.exports = class flickrApi {
   }
 
   search(options, cb) {
+    this.api500px.photos.searchByGeo([options.lat, options.lon, "10km"].join(','), {
+      exclude: 'People,Nude',
+      image_size: 200,
+      rpp: 3,
+      sort: "rating",
+      term: [options.query,'city','travel','skyline','sunset'].join(' '),
+    }, (err, results) => {
+      if (err) {
+        cb(err);
+      } else if (results && results.photos && results.photos.length) {
+        let r = results.photos[0];
+        cb(null, {
+          url: r.image_url,
+          result: r
+        });
+      } else {
+        cb("Photo not found");
+      }
+    });
+  }
+
+  searchFlickr() {
     let search_options = {
-      lat: options.lat,
-      lon: options.lon,
-      tags: [options.query, 'travel', 'downtown', 'skyline', 'outdoor', 'beach', 'sunrise', 'sunset', 'architecture'].join(','),
-      radius: 5,
+      extras: 'url_l,tags,description',
       format: 'json',
-      sort: 'relevance',
+      lat: options.lat,
+      license: '1,2,3,4,5,6,7,8',
+      lon: options.lon,
       media: 'photos',
-      in_gallery: true,
       per_page: 10,
-      extras: 'url_l,tags,description'
+      radius: 5,
+      sort: 'relevance',
+      tags: [options.query, 'travel', 'downtown', 'skyline', 'architecture', 'sunset'].join(',')
     };
     this.flickr.photos.search(search_options, (err, resp) => {
       if (err) {
@@ -33,8 +58,10 @@ module.exports = class flickrApi {
       }
       let photo = resp.photos.photo[0];
       if (photo) {
+        let url = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
+        console.log(url);
         cb(null, {
-          url: `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_q.jpg`,
+          url: url,
           photo: photo
         });
       } else {

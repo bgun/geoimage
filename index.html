@@ -2,43 +2,63 @@
 <html>
 <head>
     <style>
+        ul, li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            float: left;
+            margin-right: 10px;
+        }
+        h5 {
+            margin: 0 0 30px 0;
+        }
         img {
-            margin: 5px;
+            margin: 0 5px 5px 0;
+            width: 200px;
         }
     </style>
 </head>
 <body>
     <h1>Test</h1>
-    <div id="cities"></div>
+    <ul id="cities"></ul>
     <script>
       let cities = [
         'atlanta',
+        'anchorage',
         'boston',
         'chicago',
         'dallas',
-        'delhi',
         'guangzhou',
         'honolulu',
         'johannesburg',
+        'kyoto',
         'las vegas',
+        'london',
         'los angeles',
         'madrid',
         'miami',
         'moscow',
+        'new orleans',
         'nyc',
         'orlando',
         'paris',
         'shanghai',
         'shenzhen',
         'tokyo',
-        'ubud',
-        'venice'
+        'ubud'
       ];
       let citiesElArray = cities.map(city => {
-        let el = document.createElement('img');
-        el.src = '/search/'+city;
-        el.title = city;
-        return el;
+        let li  = document.createElement('li');
+        let img = document.createElement('img');
+        let txt = document.createElement('h5');
+        img.src = '/search/'+city;
+        img.title = city;
+        txt.innerHTML = city;
+        li.appendChild(img);
+        li.appendChild(txt);
+        return li;
       });
       let container = document.getElementById('cities');
       citiesElArray.forEach(el => {

@@ -22,7 +22,7 @@ let line = '';
 
 module.exports = class GeonameSearch {
 
-  search(str, cb) {
+  search(query, cb) {
     let stream = fs.createReadStream(file, stream_options);
 
     const rl = readline.createInterface({
@@ -43,13 +43,13 @@ module.exports = class GeonameSearch {
 
       let search = [obj.utf8_name, obj.ascii_name].concat(obj.alternate_names).map(name => name.toUpperCase());
 
-      if (_.includes(search, str.toUpperCase())) {
+      if (_.includes(search, query.toUpperCase())) {
         results.push(obj);
       }
     });
 
     rl.on('close', () => {
-      console.log("found %d cities named", results.length);
+      console.log("found %d cities named %s", results.length, query);
       results = _.sortBy(results, ['population']);
       results.reverse();
       // return the single best match, currently most populous place

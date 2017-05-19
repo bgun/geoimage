@@ -14,16 +14,22 @@ server.get('/search/:city', (req, res) => {
   let gs = new GeonameSearch();
   let query = req.params.city;
 
-  gs.search(query, (err, city) => {
+  gs.search(query, (err, geo) => {
     if (err) {
       res.status(404).send({ error: err });
     } else {
       let ps = new PhotoSearch(() => {
-        ps.search({ query: query, lat: city.lat, lon: city.lon }, (err, photo) => {
+        let search_query = {
+          query: geo.utf8_name,
+          lat: geo.lat,
+          lon: geo.lon
+        };
+        console.log("query", search_query);
+        ps.search(search_query, (err, photo) => {
+          console.log(err, photo);
           if (err) {
-            res.status(404).send({ error: err });
+            res.status(404).set("Content-Type","application/json").send({ error: err });
           } else {
-            console.log(photo);
             request.get(photo.url, (err, data) => {
               if (err) throw err;
               res
